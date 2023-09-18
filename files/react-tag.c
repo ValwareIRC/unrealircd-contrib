@@ -50,7 +50,6 @@ ModuleHeader MOD_HEADER
 	"unrealircd-6",
 };
 
-
 #define REACT_ENTRY_LIMIT 11 // allowed length of each comma delimited string
 #define CONF_REACT_ALLOW "allowed-reacts" // the config item name
 #define REACT_CAP "valware.uk/react" // the CAP to request to use this functionality
