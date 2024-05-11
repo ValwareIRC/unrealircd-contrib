@@ -26,7 +26,7 @@ EVENT(check_for_updates);
 ModuleHeader MOD_HEADER
 = {
 	"third/upgrade-notify",	/* Name of module */
-	"2.0", /* Version */
+	"2.1", /* Version */
 	"Sends out a message to opers when there is an upgrade available for UnrealIRCd", /* Short description of module */
 	"Valware",
 	"unrealircd-6",
