@@ -167,7 +167,7 @@ CMD_FUNC(CMD_S2SFPART)
 	}
 	else
 	{
-		sendto_server(client->direction, 0, 0, NULL, ":%s S2SFPART %s", client->id, channel->name);
+		sendto_server(client->direction, 0, 0, NULL, ":%s S2SFPART %s %s", client->id, target->id, channel->name);
 	}
 	
 }
