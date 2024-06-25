@@ -49,9 +49,11 @@ int remove_configtest(ConfigFile *cf, ConfigEntry *ce, int type, int *errs);
 int remove_configrun(ConfigFile *cf, ConfigEntry *ce, int type);
 #define REMOVE "REMOVE"
 #define FPART "FPART"
+#define S2SFPART "S2SFPART"
 	
 CMD_FUNC(CMD_REMOVE);
 CMD_FUNC(CMD_FPART);
+CMD_FUNC(CMD_S2SFPART);
 
 MOD_TEST()
 {
@@ -78,6 +80,7 @@ MOD_INIT()
 	setconf();
 	CommandAdd(modinfo->handle, REMOVE, CMD_REMOVE, 3, CMD_USER);
 	CommandAdd(modinfo->handle, FPART, CMD_REMOVE, 3, CMD_USER);
+	CommandAdd(modinfo->handle, S2SFPART, CMD_S2SFPART, 3, CMD_USER);
 	return MOD_SUCCESS;
 }
 
@@ -138,11 +141,34 @@ CMD_FUNC(CMD_REMOVE)
 		sendnumeric(client, ERR_CANNOTDOCOMMAND, "REMOVE", "User is protected");
 		return;
 	}
+	if (MyUser(target))
+	{
+		parv[0] = target->name;
+		parv[1] = channel->name;
+		parv[2] = NULL;
+		do_cmd(target, NULL, "PART", 2, parv);
+	}
+	else
+	{
+		sendto_server(client->direction, 0, 0, NULL, ":%s S2SFPART %s %s", client->id, target->id, channel->name);
+	}
+}
 
-	parv[0] = target->name;
-	parv[1] = channel->name;
-	parv[2] = NULL;
-	do_cmd(target, NULL, "PART", 2, parv);
+CMD_FUNC(CMD_S2SFPART)
+{
+	Client *target = find_user(parv[1], NULL);
+	Channel *channel = find_channel(parv[2]);
+	if (MyUser(target))
+	{
+		parv[0] = target->name;
+		parv[1] = channel->name;
+		parv[2] = NULL;
+		do_cmd(target, NULL, "PART", 2, parv);
+	}
+	else
+	{
+		sendto_server(client->direction, 0, 0, NULL, ":%s S2SFPART %s", client->id, channel->name);
+	}
 	
 }
 
