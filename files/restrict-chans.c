@@ -58,7 +58,8 @@ MOD_TEST()
 
 int isreg_check_join(Client *client, Channel *channel, const char *key, char **errmsg)
 {
-	if (!SASL_SERVER)
+	Client *serv_server;
+	if (!SASL_SERVER || !(serv_server = find_server(SASL_SERVER, NULL)) || !(serv_server = find_server(SERVICES_NAME, NULL)))
 		return HOOK_CONTINUE;
 
 	if (has_channel_mode(channel, 'P')) // it's permanent, continue;
@@ -77,7 +78,8 @@ int isreg_check_join(Client *client, Channel *channel, const char *key, char **e
 
 int isreg_can_join(Client *client, Channel *channel, const char *key)
 {
-	if (!SASL_SERVER)
+	Client *serv_server;
+	if (!SASL_SERVER || !(serv_server = find_server(SASL_SERVER, NULL)) || !(serv_server = find_server(SERVICES_NAME, NULL)))
 		return HOOK_CONTINUE;
 	
 	if (has_channel_mode(channel, 'P')) // it's permanent, continue;
