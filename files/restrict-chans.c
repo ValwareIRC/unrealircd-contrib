@@ -28,7 +28,7 @@ int isreg_check_join(Client *client, Channel *channel, const char *key, char **e
 ModuleHeader MOD_HEADER =
 {
 	"third/restrict-chans",
-	"1.2",
+	"1.3",
 	"Restrict channel creation to logged-in users",
 	"Valware",
 	"unrealircd-6",
@@ -58,6 +58,9 @@ MOD_TEST()
 
 int isreg_check_join(Client *client, Channel *channel, const char *key, char **errmsg)
 {
+	if (!SASL_SERVER)
+		return HOOK_CONTINUE;
+
 	if (has_channel_mode(channel, 'P')) // it's permanent, continue;
 		return HOOK_CONTINUE;
 	if (channel->users == 0)
@@ -74,6 +77,9 @@ int isreg_check_join(Client *client, Channel *channel, const char *key, char **e
 
 int isreg_can_join(Client *client, Channel *channel, const char *key)
 {
+	if (!SASL_SERVER)
+		return HOOK_CONTINUE;
+	
 	if (has_channel_mode(channel, 'P')) // it's permanent, continue;
 		return HOOK_CONTINUE;
 	/* allow people to join permanent empty channels and allow opers to create new channels */
