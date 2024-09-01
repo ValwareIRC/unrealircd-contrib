@@ -97,24 +97,6 @@ module "third/joinmute"
 	}
 }
 
-module "third/central-api"
-{
-	description "Acquire and set API key for unrealircd.org services";
-	version "1.0.1";
-	author "UnrealIRCd Team";
-	documentation "https://www.unrealircd.org/docs/Central_API";
-	troubleshooting "Please report at https://bugs.unrealircd.org/ if this module fails to compile";
-	source "https://raw.githubusercontent.com/unrealircd/unrealircd-contrib/unreal6/files/central-api.c";
-	sha256sum "527183d6f596f5d4e1a05c2761d76c3cf6e575b0b610817f471ef528da7e2bd9";
-	min-unrealircd-version "6.1.2";
-	max-unrealircd-version "6.1.2.3";
-	post-install-text
-	{
-		"The module is installed. See https://www.unrealircd.org/docs/Central_API";
-		"for the configuration that you need to add.";
-	}
-}
-
 module "third/block_notlsident"
 {
 	description "Restrict certain idents to SSL/TLS connections only";
@@ -743,27 +725,6 @@ module "third/listrestrict"
 	}
 }
 
-module "third/blacklistrecheck"
-{
-	description "Recheck blacklists after a certain time";
-	version "1.0.0";
-	author "UnrealIRCd Team";
-	documentation "https://www.unrealircd.org/docs/Set_block#set::blacklist";
-	troubleshooting "Please report at https://bugs.unrealircd.org/ if this module fails to compile";
-	source "https://raw.githubusercontent.com/unrealircd/unrealircd-contrib/unreal6/files/blacklistrecheck.c";
-	sha256sum "663a6ab493c21ea20cd0b39e1de90177ca88ba7e5e02ca9964c2727f5eb45ca3";
-	min-unrealircd-version "6.*";
-	max-unrealircd-version "6.*";
-	post-install-text
-	{
-		"The module is installed. Now all you need to do is add a loadmodule line:";
-		"loadmodule \"third/blacklistrecheck\";";
-		"And /REHASH the IRCd.";
-		"By default the module will re-check blacklists blocks, first 1 minute after the user has connected, and after that every 5 minutes.";
-		"This can be tweaked via https://www.unrealircd.org/docs/Set_block#set::blacklist";
-	}
-}
-
 module "third/bancheck_access"
 {
 	description "Prevents people who have +o or higher from getting banned, unless done by people with +a/+q or opers";
@@ -1266,25 +1227,6 @@ module "third/sacycle"
 		"loadmodule \"third/sacycle\";";
 		"And /REHASH the IRCd.";
 		"The module does not need any other configuration.";
-	}
-}
-
-module "third/centralblocklist"
-{
-	description "Check users at central blocklist";
-	version "1.0.4";
-	author "UnrealIRCd Team";
-	documentation "https://www.unrealircd.org/docs/Central_Blocklist";
-	troubleshooting "Please report at https://bugs.unrealircd.org/ if this module fails to compile";
-	source "https://raw.githubusercontent.com/unrealircd/unrealircd-contrib/unreal6/files/centralblocklist.c";
-	sha256sum "e3096b456795d277ede0b6293ddc7e7a52e28d3652237e9ce2541a99db5adcfe";
-	min-unrealircd-version "6.1.2";
-	max-unrealircd-version "6.1.2.3";
-	post-install-text
-	{
-		"The module is installed. See https://www.unrealircd.org/docs/Central_Blocklist";
-		"for the configuration that you need to add. One important aspect is getting";
-		"an API Key, which is a process that (as of October 2023) is not open to everyone.";
 	}
 }
 
