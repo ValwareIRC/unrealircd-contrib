@@ -65,7 +65,7 @@ int chmodeNotif = 0; // Notification to go wit it
 // Dat dere module header
 ModuleHeader MOD_HEADER = {
 	"third/fixhop", // Module name
-	"2.3.2", // Version
+	"2.3.3", // Version
 	"The +h access mode seems to be a little borked/limited, this module implements some tweaks for it", // Description
 	"Gottem", // Author
 	"unrealircd-6", // Modversion
@@ -420,16 +420,23 @@ CMD_OVERRIDE_FUNC(fixhop_modeoverride) {
 	const char *mask; // Store "cleaned" ban mask
 	Cmode *chanmode;
 	int chanmode_max;
+	const char *nextbanstr;
 
 	// May not be anything to do =]
-	if((!denyWidemasks && !denyChmodes) || !MyUser(client) || IsOper(client) || parc < 3) {
-		CallCommandOverride(ovr, client, recv_mtags, parc, parv); // Run original function yo
+	if(parc < 3 || (!denyWidemasks && !denyChmodes) || (!IsULine(client) && (!MyUser(client) || IsOper(client)))) {
+		CallCommandOverride(ovr, client, recv_mtags, parc, parv);
 		return;
 	}
 
 	// You need to have hops on a channel for this to kicc in obv (or U-Line, to prevent bypassing this module with '/cs mode')
-	if(!(channel = find_channel(parv[1])) || !(check_channel_access(client, channel, "h") || IsULine(client))) {
-		CallCommandOverride(ovr, client, recv_mtags, parc, parv); // Run original function yo
+	if(!(channel = find_channel(parv[1])) || (!IsULine(client) && !check_channel_access(client, channel, "h"))) {
+		CallCommandOverride(ovr, client, recv_mtags, parc, parv);
+		return;
+	}
+
+	// Allow human +o/+a/+q users anyway (since we target hops specifically, anyone with more privileges should be exempt), but U-Lines will always be subject to restrictions because we have no way to tell who originally executed it
+	if(!IsULine(client) && check_channel_access(client, channel, "oaq")) {
+		CallCommandOverride(ovr, client, recv_mtags, parc, parv);
 		return;
 	}
 
@@ -445,7 +452,6 @@ CMD_OVERRIDE_FUNC(fixhop_modeoverride) {
 	// Loop over every mode character
 	for(i = 0; i < strlen(parv[2]); i++) {
 		c = parv[2][i];
-		mask = NULL; // Aye elemao
 		cont = 0;
 
 		// Since we check for denied modes early we also need to know the "direction" early
@@ -489,10 +495,20 @@ CMD_OVERRIDE_FUNC(fixhop_modeoverride) {
 				if(!denyWidemasks)
 					break;
 
-				// On error getting dis, just let CallCommandOverride handle it
-				mask = clean_ban_mask(parv[j], (curdir == '+' ? MODE_ADD : MODE_DEL), client, 0); // Turns "+b *" into "+b *!*@*" so we can easily check bel0w =]
+				// Turn "+b *" into "+b *!*@*" so we can easily check bel0w =]
+			#if (UNREAL_VERSION_MAJOR < 1 || (UNREAL_VERSION_MAJOR == 1 && UNREAL_VERSION_MINOR < 8))
+				mask = clean_ban_mask(parv[j], (curdir == '-' ? MODE_DEL : MODE_ADD), client, 0);
+			#else
+				mask = clean_ban_mask(parv[j], (curdir == '-' ? MODE_DEL : MODE_ADD), EXBTYPE_BAN, client, channel, 0);
+			#endif
+
 				if(!mask)
 					break;
+
+				// Remove all extbans because we only need to match the "bare" mask
+				nextbanstr = NULL;
+				while(is_extended_ban(mask) && findmod_by_bantype(mask, &nextbanstr))
+					mask = nextbanstr; // `findmod_by_bantype()` can never return non-NULL if `nextbanstr` is NULL ;]
 
 				// Need at least 4 non-wildcard chars
 				pc = 0;
@@ -600,7 +616,7 @@ CMD_OVERRIDE_FUNC(fixhop_modeoverride) {
 		newparv[newparc] = NULL;
 	else
 		newparv[MAXPARA] = NULL;
-	CallCommandOverride(ovr, client, recv_mtags, newparc, newparv); // Run original function yo
+	CallCommandOverride(ovr, client, recv_mtags, newparc, newparv);
 }
 
 void add_invite(Client *from, Client *to, Channel *channel, MessageTag *mtags) {
