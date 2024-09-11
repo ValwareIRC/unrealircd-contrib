@@ -160,7 +160,7 @@ CMD_OVERRIDE_FUNC(bancheck_override) {
 	}
 
 	// Need to be at least hops or higher on a channel for this to kicc in obv (or U-Line, to prevent bypassing this module with '/cs mode')
-	if(!(channel = find_channel(parv[1])) || (!IsULine(client) && !check_channel_access(client, channel, "hoaq"))) {
+	if(!(channel = find_channel(parv[1])) || (!IsULine(client) && !check_channel_access(client, channel, "ho"))) {
 		CallCommandOverride(ovr, client, recv_mtags, parc, parv);
 		return;
 	}
