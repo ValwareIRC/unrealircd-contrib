@@ -82,7 +82,7 @@ static char *saumodehelp[] = {
 // Dat dere module header
 ModuleHeader MOD_HEADER = {
 	"third/sacmds", // Module name
-	"2.2.1", // Version
+	"2.2.2", // Version
 	"Implements SA* commands for privileged opers", // Description
 	"Gottem", // Author
 	"unrealircd-6", // Modversion
@@ -123,8 +123,10 @@ CMD_FUNC(cmd_sanick) {
 	Client *ocptr; // "New" check
 	time_t tiem; // Nickchange timestamp etc
 	MessageTag *mtags;
+#if (UNREAL_VERSION_MAJOR < 1)
 	char descbuf[BUFSIZE];
 	unsigned char removemoder;
+#endif
 
 	// Prevent non-privileged opers from using this command
 	if(!ValidatePermissionsForPath("sanick", client, NULL, NULL, NULL) && !IsULine(client)) {
