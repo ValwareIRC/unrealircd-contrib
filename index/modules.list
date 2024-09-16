@@ -1310,12 +1310,12 @@ module "third/report"
 module "third/pmlist"
 {
 	description "Implements umode +P to allow only certain people to privately message you";
-	version "2.1.0";
+	version "2.1.1";
 	author "Gottem";
 	documentation "https://gottem.nl/unreal/man/pmlist";
 	troubleshooting "In case of problems, check the FAQ at https://gottem.nl/unreal/halp or e-mail me at support@gottem.nl";
 	source "https://raw.githubusercontent.com/unrealircd/unrealircd-contrib/unreal6/files/pmlist.c";
-	sha256sum "148c3dacadf4236c92ba0a2913b648d4f1f5ee3e4ac899206be3c70eaa79d626";
+	sha256sum "3a58dfe6fe1fb3f488e8ba93e37d90d167c556c4d4755ccad43b1959142c2658";
 	min-unrealircd-version "6.*";
 	post-install-text
 	{
