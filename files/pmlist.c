@@ -115,7 +115,7 @@ static char *pmlistHalp[] = {
 // Dat dere module header
 ModuleHeader MOD_HEADER = {
 	"third/pmlist", // Module name
-	"2.1.0", // Version
+	"2.1.1", // Version
 	"Implements umode +P to allow only certain people to privately message you", // Description
 	"Gottem", // Author
 	"unrealircd-6", // Modversion
@@ -360,6 +360,9 @@ CMD_FUNC(cmd_openpm) {
 		sendnumeric(client, ERR_NOSUCHNICK, parv[1]); // Send error lol
 		return;
 	}
+
+	if(acptr == client)
+		return dumpit(client, pmlistHalp);
 
 	if(IsULine(acptr)) { // Checkem U-Line lol
 		sendnotice(client, "[pmlist] There's no need to whitelist U-Lined users (%s)", acptr->name);
