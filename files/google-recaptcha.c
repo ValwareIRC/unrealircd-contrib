@@ -6,7 +6,7 @@
 /*** <<<MODULE MANAGER START>>>
 module
 {
-		documentation "https://github.com/ValwareIRC/valware-unrealircd-mods/blob/main/google-recaptcha/README.md";
+		documentation "https://github.com/ValwareIRC/valware-unrealircd-mods/blob/main/google-recaptcha/google-recaptcha.md";
 		troubleshooting "In case of problems, check the documentation or e-mail me at v.a.pond@outlook.com";
 		min-unrealircd-version "6.1.8";
 		max-unrealircd-version "6.*";
