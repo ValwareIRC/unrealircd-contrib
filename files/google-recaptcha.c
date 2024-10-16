@@ -10,10 +10,10 @@ module
 		troubleshooting "In case of problems, check the documentation or e-mail me at v.a.pond@outlook.com";
 		min-unrealircd-version "6.1.8";
 		max-unrealircd-version "6.*";
-		post-install-text {
+		post-install-text{
 				"The module is installed. Now all you need to do is add a loadmodule line:";
 				"loadmodule \"third/google-recaptcha\";";
-				"Don't forget to configure a 'recaptcha {}' block to point at your verification page (See docs)",
+				"Don't forget to configure a 'recaptcha{}' block to point at your verification page (See docs)",
 				"Once you're good to go, you can finally type: ./unrealircd rehash";
 		}
 }
@@ -23,7 +23,7 @@ module
 #include "unrealircd.h"
 
 ModuleHeader MOD_HEADER
-= {
+={
 	"third/google-recaptcha",
 	"0.9",
 	"Protect your UnrealIRCd network with Google reCAPTCHA",
@@ -34,8 +34,8 @@ ModuleHeader MOD_HEADER
 #define RECAPTCHA_CONF "recaptcha"
 #define RECAPTCHA_DB "../data/recaptcha.db"
 #define GetRCCode(x)			moddata_client_get(x, "recaptcha_code")
-#define SetRCCode(x, y)		do { moddata_client(x, recaptcha_code).str = strdup(y); } while (0)
-#define UnsetRCCode(x)		do { moddata_client_set(x, "recaptcha_code", NULL); } while (0)
+#define SetRCCode(x, y)		do{ moddata_client(x, recaptcha_code).str = strdup(y); } while (0)
+#define UnsetRCCode(x)		do{ moddata_client_set(x, "recaptcha_code", NULL); } while (0)
 
 void set_config_defaults(void);
 void free_config(void);
@@ -44,7 +44,7 @@ int recaptcha_configposttest(int *errs); // You may not need this
 int recaptcha_configrun(ConfigFile *cf, ConfigEntry *ce, int type);
 
 
-struct recaptcha_conf {
+struct recaptcha_conf{
 	char *url;
 	unsigned long ipcache;
 	unsigned long timeout;
@@ -86,7 +86,7 @@ CMD_FUNC(CMD_REMOTE_ALLOW_RECAPTCHA);
 
 EVENT(recaptcha_clearup_event);
 
-static char *rc_help[] = {
+static char *rc_help[] ={
 	"*** RLINE/UNRLINE ***",
 	"This command lets you add TKL-like 'R-Lines'.",
 	"When a user is affected by an R-Line, they will be required to",
@@ -349,7 +349,7 @@ int save_recaptcha_db(json_t *root)
 
 // Function to add an object (entry) to the array
 int add_rline(const char *mask, const char *reason, const char *set_by_user, time_t set_at, time_t expiry)
- {
+{
 	json_t *root = load_recaptcha_db();
 	if (!root)
 	{
@@ -386,7 +386,7 @@ int add_rline(const char *mask, const char *reason, const char *set_by_user, tim
 		{
 			sprintf(expiry_time, "%ldm", time_in_minutes);
 		}
-	} else {
+	} else{
 		expiry_time = safe_alloc(strlen("permanent") + 1);
 		if (expiry_time != NULL)
 		{
@@ -463,7 +463,7 @@ bool valid_rline(const char *mask)
 		{
 			// Valid extended ban with a non-empty value after the colon
 			return true;
-		} else {
+		} else{
 			// Invalid extended ban (missing colon or empty suffix)
 			return false;
 		}
@@ -793,7 +793,7 @@ CMD_FUNC(CMD_RLINE)
 			sprintf(hostip, "*@%s", lkup->ip);
 			mask = hostip;
 		}
-		else {
+		else{
 			sendnotice(client, "Not a valid R-Line. Must be in the form of an *@ip.host, ~extended:ban, or nick.");
 			return;
 		}
