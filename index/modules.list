@@ -59,6 +59,26 @@ module "third/hidebans"
 	}
 }
 
+module "third/google-recaptcha"
+{
+	description "Protect your UnrealIRCd network with Google reCAPTCHA";
+	version "0.9";
+	author "Valware";
+	documentation "https://github.com/ValwareIRC/valware-unrealircd-mods/blob/main/google-recaptcha/google-recaptcha.md";
+	troubleshooting "In case of problems, check the documentation or e-mail me at v.a.pond@outlook.com";
+	source "https://raw.githubusercontent.com/unrealircd/unrealircd-contrib/unreal6/files/google-recaptcha.c";
+	sha256sum "21aa2ba3da7436fbe1038da0b53ba7aeb872b7a39b8b89905942933e17e9282d";
+	min-unrealircd-version "6.1.8";
+	max-unrealircd-version "6.*";
+	post-install-text
+	{
+		"The module is installed. Now all you need to do is add a loadmodule line:";
+		"loadmodule \"third/google-recaptcha\";";
+		"Don't forget to configure a 'recaptcha{}' block to point at your verification page (See docs)";
+		"Once you're good to go, you can finally type: ./unrealircd rehash";
+	}
+}
+
 module "third/qline"
 {
 	description "/QLINE and /UNQLINE commands to allow opers to manually add Q-lines (global nick bans).";
