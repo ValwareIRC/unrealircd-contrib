@@ -7,14 +7,14 @@
 module
 {
         documentation "https://github.com/ValwareIRC/valware-unrealircd-mods/blob/main/google-recaptcha/README.md";
-		troubleshooting "In case of problems, check the documentation or e-mail me at v.a.pond@outlook.com";
+        troubleshooting "In case of problems, check the documentation or e-mail me at v.a.pond@outlook.com";
         min-unrealircd-version "6.1.8";
         max-unrealircd-version "6.*";
         post-install-text {
                 "The module is installed. Now all you need to do is add a loadmodule line:";
                 "loadmodule \"third/google-recaptcha\";";
                 "Don't forget to configure a 'recaptcha {}' block to point at your verification page (See docs)",
-				"Once you're good to go, you can finally type: ./unrealircd rehash"
+                "Once you're good to go, you can finally type: ./unrealircd rehash";
         }
 }
 *** <<<MODULE MANAGER END>>>
