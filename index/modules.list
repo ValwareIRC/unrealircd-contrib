@@ -997,6 +997,26 @@ module "third/block_no_tls"
 	}
 }
 
+module "third/dictionary"
+{
+	description "Lets you and your visitors look up the definition of a word (English)";
+	version "1.0";
+	author "Valware";
+	documentation "https://github.com/ValwareIRC/valware-unrealircd-mods/blob/main/dictionary/README.md";
+	troubleshooting "In case of problems, check the documentation or e-mail me at valerie@valware.co.uk";
+	source "https://raw.githubusercontent.com/unrealircd/unrealircd-contrib/unreal6/files/dictionary.c";
+	sha256sum "93541a2d7311e5fa7bcaccd1663daea4c3a93cd3d77f086508d0183702441c6a";
+	min-unrealircd-version "6.*";
+	max-unrealircd-version "6.*";
+	post-install-text
+	{
+		"The module is installed. Now all you need to do is add a loadmodule line:";
+		"loadmodule \"third/dictionary\";";
+		"to your configuration, and then rehash your server.";
+		"The module does not need any other configuration.";
+	}
+}
+
 module "third/inchannelban-enforce"
 {
 	description "Enforce ~c bans so they can't be circumvented";
