@@ -6,16 +6,16 @@
 /*** <<<MODULE MANAGER START>>>
 module
 {
-        documentation "https://github.com/ValwareIRC/valware-unrealircd-mods/blob/main/google-recaptcha/README.md";
-        troubleshooting "In case of problems, check the documentation or e-mail me at v.a.pond@outlook.com";
-        min-unrealircd-version "6.1.8";
-        max-unrealircd-version "6.*";
-        post-install-text {
-                "The module is installed. Now all you need to do is add a loadmodule line:";
-                "loadmodule \"third/google-recaptcha\";";
-                "Don't forget to configure a 'recaptcha {}' block to point at your verification page (See docs)",
-                "Once you're good to go, you can finally type: ./unrealircd rehash";
-        }
+		documentation "https://github.com/ValwareIRC/valware-unrealircd-mods/blob/main/google-recaptcha/README.md";
+		troubleshooting "In case of problems, check the documentation or e-mail me at v.a.pond@outlook.com";
+		min-unrealircd-version "6.1.8";
+		max-unrealircd-version "6.*";
+		post-install-text {
+				"The module is installed. Now all you need to do is add a loadmodule line:";
+				"loadmodule \"third/google-recaptcha\";";
+				"Don't forget to configure a 'recaptcha {}' block to point at your verification page (See docs)",
+				"Once you're good to go, you can finally type: ./unrealircd rehash";
+		}
 }
 *** <<<MODULE MANAGER END>>>
 */
@@ -206,8 +206,8 @@ RPC_CALL_FUNC(rpc_recaptcha_find)
 
 	Client *client2;
 
-    list_for_each_entry(client2, &client_list, client_node)
-    {
+	list_for_each_entry(client2, &client_list, client_node)
+	{
 		if (GetRCCode(client2) != NULL && !strcmp(GetRCCode(client2),token))
 		{
 			i++;
@@ -241,8 +241,8 @@ RPC_CALL_FUNC(rpc_recaptcha_allow)
 
 	Client *client2;
 
-    list_for_each_entry(client2, &client_list, client_node)
-    {
+	list_for_each_entry(client2, &client_list, client_node)
+	{
 		if (GetRCCode(client2) != NULL && !strcmp(GetRCCode(client2),token))
 		{
 			i++;
@@ -277,7 +277,7 @@ int recaptcha_pre_connect(Client *client)
    		generateRandomString(randomString, 16);
 		SetRCCode(client, randomString);
 
-        sendnotice(client, "%s", reason);
+		sendnotice(client, "%s", reason);
 		sendnotice(client, "%s?t=%s", recaptcha_conf.url, randomString);
 		return HOOK_DENY; /* do not process register_user() */
 	}
@@ -287,21 +287,21 @@ int recaptcha_pre_connect(Client *client)
 
 void generateRandomString(char *randomString, int length)
 {
-    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    int charsetSize = sizeof(charset) - 1; // Exclude the null terminator
+	const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	int charsetSize = sizeof(charset) - 1; // Exclude the null terminator
 
-    // Seed the random number generator using time and process ID to ensure uniqueness
-    unsigned int seed = (unsigned int)time(NULL) ^ getpid();
-    srand(seed);
+	// Seed the random number generator using time and process ID to ensure uniqueness
+	unsigned int seed = (unsigned int)time(NULL) ^ getpid();
+	srand(seed);
 
-    // Generate the random string
-    for (int i = 0; i < length; i++)
+	// Generate the random string
+	for (int i = 0; i < length; i++)
 	{
-        int randomIndex = rand() % charsetSize;
-        randomString[i] = charset[randomIndex];
-    }
+		int randomIndex = rand() % charsetSize;
+		randomString[i] = charset[randomIndex];
+	}
 
-    randomString[length] = '\0'; // Null-terminate the string
+	randomString[length] = '\0'; // Null-terminate the string
 }
 
 void recaptcha_code_unserialize(const char *str, ModData *m)
@@ -325,55 +325,55 @@ void recaptcha_code_free(ModData *m)
 // Function to load JSON from file
 json_t *load_recaptcha_db()
 {
-    json_error_t error;
-    json_t *root = json_load_file(RECAPTCHA_DB, 0, &error);
+	json_error_t error;
+	json_t *root = json_load_file(RECAPTCHA_DB, 0, &error);
 
-    if (!root)
+	if (!root)
 	{
-        return NULL;
-    }
+		return NULL;
+	}
 
-    return root;
+	return root;
 }
 
 // Function to write JSON to file
 int save_recaptcha_db(json_t *root)
 {
-    if (json_dump_file(root, RECAPTCHA_DB, JSON_INDENT(4)) != 0)
+	if (json_dump_file(root, RECAPTCHA_DB, JSON_INDENT(4)) != 0)
 	{
-        return -1;
-    }
+		return -1;
+	}
 
-    return 0;
+	return 0;
 }
 
 // Function to add an object (entry) to the array
 int add_rline(const char *mask, const char *reason, const char *set_by_user, time_t set_at, time_t expiry)
  {
-    json_t *root = load_recaptcha_db();
-    if (!root)
+	json_t *root = load_recaptcha_db();
+	if (!root)
 	{
-        root = json_object(); // Create new root if none exists
-    }
+		root = json_object(); // Create new root if none exists
+	}
 
-    json_t *entries = json_object_get(root, "entries");
-    if (!entries)
+	json_t *entries = json_object_get(root, "entries");
+	if (!entries)
 	{
-        entries = json_array(); // Create a new array if it doesn't exist
-        json_object_set_new(root, "entries", entries);
-    }
+		entries = json_array(); // Create a new array if it doesn't exist
+		json_object_set_new(root, "entries", entries);
+	}
 
-    json_t *new_entry = json_object();
-    json_object_set_new(new_entry, "mask", json_string(mask));
-    json_object_set_new(new_entry, "reason", json_string(reason));
-    json_object_set_new(new_entry, "set_by_user", json_string(set_by_user));
-    json_object_set_new(new_entry, "set_at", json_integer(set_at));
-    json_object_set_new(new_entry, "expiry", json_integer(expiry));
+	json_t *new_entry = json_object();
+	json_object_set_new(new_entry, "mask", json_string(mask));
+	json_object_set_new(new_entry, "reason", json_string(reason));
+	json_object_set_new(new_entry, "set_by_user", json_string(set_by_user));
+	json_object_set_new(new_entry, "set_at", json_integer(set_at));
+	json_object_set_new(new_entry, "expiry", json_integer(expiry));
 
-    json_array_append_new(entries, new_entry); // Add the new entry
+	json_array_append_new(entries, new_entry); // Add the new entry
 
-    int result = save_recaptcha_db(root);
-    json_decref(root);
+	int result = save_recaptcha_db(root);
+	json_decref(root);
 
 	char *expiry_time = NULL;
 
@@ -401,125 +401,125 @@ int add_rline(const char *mask, const char *reason, const char *set_by_user, tim
 				log_data_string("expiry", expiry_time));
 
 	free(expiry_time);
-    return result;
+	return result;
 }
 
 // Function to print all entries
 void print_entries(Client *client)
 {
-    json_t *root = load_recaptcha_db();
-    if (!root)
+	json_t *root = load_recaptcha_db();
+	if (!root)
 	{
 		sendto_one(client, NULL, ":%s 219 %s R :End of /STATS report", me.name, client->name);
 		return;
 	}
 
-    json_t *entries = json_object_get(root, "entries");
-    if (!json_is_array(entries))
+	json_t *entries = json_object_get(root, "entries");
+	if (!json_is_array(entries))
 	{
 		sendto_one(client, NULL, ":%s 219 %s R :End of /STATS report", me.name, client->name);
-        json_decref(root);
-        return;
-    }
+		json_decref(root);
+		return;
+	}
 
-    size_t index;
-    json_t *entry;
-    json_array_foreach(entries, index, entry)
+	size_t index;
+	json_t *entry;
+	json_array_foreach(entries, index, entry)
 	{
-        const char *mask = json_string_value(json_object_get(entry, "mask"));
-        const char *reason = json_string_value(json_object_get(entry, "reason"));
-        const char *set_by_user = json_string_value(json_object_get(entry, "set_by_user"));
-        time_t set_at = (time_t)json_integer_value(json_object_get(entry, "set_at"));
-        time_t expiry = (time_t)json_integer_value(json_object_get(entry, "expiry"));
+		const char *mask = json_string_value(json_object_get(entry, "mask"));
+		const char *reason = json_string_value(json_object_get(entry, "reason"));
+		const char *set_by_user = json_string_value(json_object_get(entry, "set_by_user"));
+		time_t set_at = (time_t)json_integer_value(json_object_get(entry, "set_at"));
+		time_t expiry = (time_t)json_integer_value(json_object_get(entry, "expiry"));
 
 		sendto_one(client, NULL, ":%s 223 %s R %s %ld %ld %s :%s", me.name, client->name, mask, expiry, set_at, set_by_user, reason);
-    }
+	}
 	sendto_one(client, NULL, ":%s 219 %s R :End of /STATS report", me.name, client->name);
 
-    json_decref(root);
+	json_decref(root);
 }
 
 // Basic as fuck validation checking
 bool valid_rline(const char *mask)
 {
-    // Ensure the mask is not NULL or empty
-    if (!mask || strlen(mask) == 0)
+	// Ensure the mask is not NULL or empty
+	if (!mask || strlen(mask) == 0)
 	{
-        return false;
-    }
+		return false;
+	}
 
-    // Check if the mask starts with *@ (hostmask)
-    if (strncmp(mask, "*@", 2) == 0)
+	// Check if the mask starts with *@ (hostmask)
+	if (strncmp(mask, "*@", 2) == 0)
 	{
-        return true; // Valid hostmask
-    }
+		return true; // Valid hostmask
+	}
 
-    // Check if the mask starts with ~ (extended ban)
-    if (mask[0] == '~')
+	// Check if the mask starts with ~ (extended ban)
+	if (mask[0] == '~')
 	{
-        // Find the colon in the mask
-        const char *colon_pos = strchr(mask, ':');
-        if (colon_pos && strlen(colon_pos + 1) > 0)
+		// Find the colon in the mask
+		const char *colon_pos = strchr(mask, ':');
+		if (colon_pos && strlen(colon_pos + 1) > 0)
 		{
-            // Valid extended ban with a non-empty value after the colon
-            return true;
-        } else {
-            // Invalid extended ban (missing colon or empty suffix)
-            return false;
-        }
-    }
+			// Valid extended ban with a non-empty value after the colon
+			return true;
+		} else {
+			// Invalid extended ban (missing colon or empty suffix)
+			return false;
+		}
+	}
 
-    // If none of the conditions matched, the mask is invalid
-    return false;
+	// If none of the conditions matched, the mask is invalid
+	return false;
 }
 
 
 // Function to find an entry by mask
 json_t *find_rline_by_mask(const char *mask)
 {
-    json_t *root = load_recaptcha_db();
-    if (!root) return NULL;
+	json_t *root = load_recaptcha_db();
+	if (!root) return NULL;
 
-    json_t *entries = json_object_get(root, "entries");
-    if (!json_is_array(entries))
+	json_t *entries = json_object_get(root, "entries");
+	if (!json_is_array(entries))
 	{
-        json_decref(root);
-        return NULL;
-    }
+		json_decref(root);
+		return NULL;
+	}
 
-    size_t index;
-    json_t *entry;
-    json_array_foreach(entries, index, entry)
+	size_t index;
+	json_t *entry;
+	json_array_foreach(entries, index, entry)
 	{
-        const char *current_mask = json_string_value(json_object_get(entry, "mask"));
-        if (strcmp(current_mask, mask) == 0)
+		const char *current_mask = json_string_value(json_object_get(entry, "mask"));
+		if (strcmp(current_mask, mask) == 0)
 		{
-            json_incref(entry);  // Increment reference so we can return it
-            json_decref(root);   // Decrease root since we don't need it anymore
-            return entry;        // Return the matching entry
-        }
-    }
+			json_incref(entry);  // Increment reference so we can return it
+			json_decref(root);   // Decrease root since we don't need it anymore
+			return entry;		// Return the matching entry
+		}
+	}
 
-    json_decref(root);  // Clean up
-    return NULL;  // No match found
+	json_decref(root);  // Clean up
+	return NULL;  // No match found
 }
 
 json_t *match_rline(Client *client)
 {
 	json_t *root = load_recaptcha_db();
-    if (!root) return NULL;
+	if (!root) return NULL;
 
-    json_t *entries = json_object_get(root, "entries");
-    if (!json_is_array(entries)) 
+	json_t *entries = json_object_get(root, "entries");
+	if (!json_is_array(entries)) 
 	{
-        json_decref(root);
-        return NULL;
-    }
+		json_decref(root);
+		return NULL;
+	}
 	int found = 0;
-    size_t index;
-    json_t *entry, *ret = NULL;
+	size_t index;
+	json_t *entry, *ret = NULL;
 	const char *reason = NULL;
-    json_array_foreach(entries, index, entry)
+	json_array_foreach(entries, index, entry)
 	{
 		GeoIPResult *geo;
 		const char *mask = json_string_value(json_object_get(entry, "mask"));
@@ -587,40 +587,40 @@ json_t *match_rline(Client *client)
 	}
 	if (ret)
 		json_incref(ret);
-    json_decref(root);  // Clean up
+	json_decref(root);  // Clean up
 	return (ret) ? ret : NULL;
 }
 
 // Function to delete an entry by mask
 int delete_rline_by_mask(const char *mask)
 {
-    json_t *root = load_recaptcha_db();
-    if (!root) return -1;
+	json_t *root = load_recaptcha_db();
+	if (!root) return -1;
 
-    json_t *entries = json_object_get(root, "entries");
-    if (!json_is_array(entries))
+	json_t *entries = json_object_get(root, "entries");
+	if (!json_is_array(entries))
 	{
 		
-        json_decref(root);
-        return -1;
-    }
+		json_decref(root);
+		return -1;
+	}
 
-    size_t index;
-    json_t *entry;
-    json_array_foreach(entries, index, entry)
+	size_t index;
+	json_t *entry;
+	json_array_foreach(entries, index, entry)
 	{
-        const char *current_mask = json_string_value(json_object_get(entry, "mask"));
-        if (strcmp(current_mask, mask) == 0)
+		const char *current_mask = json_string_value(json_object_get(entry, "mask"));
+		if (strcmp(current_mask, mask) == 0)
 		{
-            json_array_remove(entries, index);  // Remove the entry at this index
-            int result = save_recaptcha_db(root);
-            json_decref(root);  // Clean up
-            return result;
-        }
-    }
+			json_array_remove(entries, index);  // Remove the entry at this index
+			int result = save_recaptcha_db(root);
+			json_decref(root);  // Clean up
+			return result;
+		}
+	}
 
-    json_decref(root);
-    return -1;  // No match found
+	json_decref(root);
+	return -1;  // No match found
 }
 
 // Function to add IP address with expiry to the "memory" array
@@ -630,139 +630,139 @@ int remember_ip(const char *ip, time_t expiry)
 	if (recaptcha_conf.ipcache == 0)
 		return 1;
 
-    json_t *root = load_recaptcha_db();
-    if (!root)
+	json_t *root = load_recaptcha_db();
+	if (!root)
 	{
-        root = json_object(); // Create new root if none exists
-    }
+		root = json_object(); // Create new root if none exists
+	}
 
-    json_t *memory = json_object_get(root, "memory");
-    if (!memory)
+	json_t *memory = json_object_get(root, "memory");
+	if (!memory)
 	{
-        memory = json_object(); // Create a new memory object if it doesn't exist
-        json_object_set_new(root, "memory", memory);
-    }
+		memory = json_object(); // Create a new memory object if it doesn't exist
+		json_object_set_new(root, "memory", memory);
+	}
 
-    json_object_set_new(memory, ip, json_integer(expiry)); // Add IP with expiry
+	json_object_set_new(memory, ip, json_integer(expiry)); // Add IP with expiry
 
-    int result = save_recaptcha_db(root);
-    json_decref(root);
+	int result = save_recaptcha_db(root);
+	json_decref(root);
 
-    return result;
+	return result;
 }
 
 
 // Function to check if an IP address exists in "memory" and is valid (not expired)
 bool is_ip_in_memory(const char *ip)
 {
-    json_t *root = load_recaptcha_db();
-    if (!root) return false;
+	json_t *root = load_recaptcha_db();
+	if (!root) return false;
 
-    json_t *memory = json_object_get(root, "memory");
-    if (!json_is_object(memory))
+	json_t *memory = json_object_get(root, "memory");
+	if (!json_is_object(memory))
 	{
-        json_decref(root);
-        return false;
-    }
+		json_decref(root);
+		return false;
+	}
 
-    json_t *expiry = json_object_get(memory, ip);
-    if (!expiry)
+	json_t *expiry = json_object_get(memory, ip);
+	if (!expiry)
 	{
-        json_decref(root);
-        return false;
-    }
+		json_decref(root);
+		return false;
+	}
 
-    time_t expiry_time = (time_t)json_integer_value(expiry);
-    time_t current_time = time(NULL);
-    
-    json_decref(root);
+	time_t expiry_time = (time_t)json_integer_value(expiry);
+	time_t current_time = time(NULL);
+	
+	json_decref(root);
 
-    return current_time < expiry_time; // Return true if the IP is still valid
+	return current_time < expiry_time; // Return true if the IP is still valid
 }
 
 // Function to remove expired IPs from the "memory" array in the db file
 int clean_up_expired_ips()
 {
-    json_t *root = load_recaptcha_db();
-    if (!root) return -1;
+	json_t *root = load_recaptcha_db();
+	if (!root) return -1;
 
-    json_t *memory = json_object_get(root, "memory");
-    if (!json_is_object(memory))
+	json_t *memory = json_object_get(root, "memory");
+	if (!json_is_object(memory))
 	{
-        json_decref(root);
-        return 0;
-    }
+		json_decref(root);
+		return 0;
+	}
 
-    const char *ip;
-    json_t *expiry;
-    json_t *to_remove = json_array(); // Collect expired IPs
+	const char *ip;
+	json_t *expiry;
+	json_t *to_remove = json_array(); // Collect expired IPs
 
-    time_t current_time = time(NULL);
-    json_object_foreach(memory, ip, expiry)
+	time_t current_time = time(NULL);
+	json_object_foreach(memory, ip, expiry)
 	{
-        time_t expiry_time = (time_t)json_integer_value(expiry);
-        if (current_time >= expiry_time)
+		time_t expiry_time = (time_t)json_integer_value(expiry);
+		if (current_time >= expiry_time)
 		{
-            json_array_append_new(to_remove, json_string(ip)); // Add expired IP to remove list
-        }
-    }
+			json_array_append_new(to_remove, json_string(ip)); // Add expired IP to remove list
+		}
+	}
 
-    size_t index;
-    json_t *expired_ip;
-    json_array_foreach(to_remove, index, expired_ip)
+	size_t index;
+	json_t *expired_ip;
+	json_array_foreach(to_remove, index, expired_ip)
 	{
-        json_object_del(memory, json_string_value(expired_ip)); // Remove expired IPs
-    }
+		json_object_del(memory, json_string_value(expired_ip)); // Remove expired IPs
+	}
 
-    json_decref(to_remove);
-    int result = save_recaptcha_db(root);
-    json_decref(root);
+	json_decref(to_remove);
+	int result = save_recaptcha_db(root);
+	json_decref(root);
 
-    return result;
+	return result;
 }
 
 int clean_up_expired_rlines()
 {
-    json_t *root = load_recaptcha_db();
-    if (!root)
+	json_t *root = load_recaptcha_db();
+	if (!root)
 	{
 		return 0;
-    }
+	}
 
-    json_t *entries = json_object_get(root, "entries");
-    if (!json_is_array(entries))
+	json_t *entries = json_object_get(root, "entries");
+	if (!json_is_array(entries))
 	{
-        json_decref(root);
+		json_decref(root);
 		return 0;
-    }
+	}
 
-    time_t current_time = time(NULL);  // Get the current time
-    size_t index;
-    json_t *entry;
+	time_t current_time = time(NULL);  // Get the current time
+	size_t index;
+	json_t *entry;
 
-    size_t entries_count = json_array_size(entries);
-    for (size_t i = 0; i < entries_count; i++)
+	size_t entries_count = json_array_size(entries);
+	for (size_t i = 0; i < entries_count; i++)
 	{
-        entry = json_array_get(entries, i);
-        time_t expiry = (time_t)json_integer_value(json_object_get(entry, "expiry"));
+		entry = json_array_get(entries, i);
+		time_t expiry = (time_t)json_integer_value(json_object_get(entry, "expiry"));
 		if (expiry == 0)
 			continue;
 		
-        if (expiry < current_time)
+		if (expiry < current_time)
 		{
 			unreal_log(ULOG_INFO, "tkl", "TKL_EXPIRE", NULL, "Expiring R-Line: $mask [reason: $reason] [set by: $set_by_user]",
 									log_data_string("mask", json_string_value(json_object_get(entry, "mask"))),
 									log_data_string("reason", json_string_value(json_object_get(entry, "reason"))),
 									log_data_string("set_by_user", json_string_value(json_object_get(entry, "set_by_user"))));
 
-            json_array_remove(entries, i);
-            i--;
-            entries_count--;
-        }
-    }
+			json_array_remove(entries, i);
+			i--;
+			entries_count--;
+		}
+	}
 
-    // Save the updated JSON back to the file
-    return save_recaptcha_db(root);
+	// Save the updated JSON back to the file
+	return save_recaptcha_db(root);
 }
 
 
@@ -815,7 +815,7 @@ CMD_FUNC(CMD_RLINE)
 		sendnotice(client, "[error] R-Line with that mask already exists: \"%s\"", mask);
 		return;
 	}
-    add_rline(mask, reason, client->name, TStime(), time == TStime() ? 0 : time);
+	add_rline(mask, reason, client->name, TStime(), time == TStime() ? 0 : time);
 	sendto_server(NULL, 0, 0, NULL, ":%s RLINE %s %s :%s", client->id, parv[1], BadPtr(parv[2]) ? "0" : parv[2], reason);
 	safe_free(hostip);
 }
@@ -1056,11 +1056,11 @@ CMD_FUNC(CMD_RLINESYNC)
 int recaptcha_server_sync(Client *client)
 {
 	json_t *root = load_recaptcha_db();
-    if (!root)
+	if (!root)
 		return 0;
 	
-    json_t *entries = json_object_get(root, "entries");
-    if (json_is_array(entries))
+	json_t *entries = json_object_get(root, "entries");
+	if (json_is_array(entries))
 	{
 		size_t index;
 		json_t *entry;
@@ -1076,21 +1076,21 @@ int recaptcha_server_sync(Client *client)
 		}
 	}
 	
-    json_t *memory = json_object_get(root, "memory");
-    if (!json_is_object(memory))
+	json_t *memory = json_object_get(root, "memory");
+	if (!json_is_object(memory))
 	{
-        json_decref(root);
-        return 0;
-    }
+		json_decref(root);
+		return 0;
+	}
 
-    const char *ip;
-    json_t *expiry;
-    json_object_foreach(memory, ip, expiry)
+	const char *ip;
+	json_t *expiry;
+	json_object_foreach(memory, ip, expiry)
 	{
-        time_t expiry_time = (time_t)json_integer_value(expiry);
-        sendto_one(client, NULL, ":%s RLINESYNC M %s %ld", me.name, ip, expiry_time);
-    }
-    json_decref(root);
+		time_t expiry_time = (time_t)json_integer_value(expiry);
+		sendto_one(client, NULL, ":%s RLINESYNC M %s %ld", me.name, ip, expiry_time);
+	}
+	json_decref(root);
 	return 0;
 }
 
@@ -1110,8 +1110,8 @@ CMD_FUNC(CMD_REMOTE_ALLOW_RECAPTCHA)
 {
 	int i = 0;
 	Client *client2;
-    list_for_each_entry(client2, &client_list, client_node)
-    {
+	list_for_each_entry(client2, &client_list, client_node)
+	{
 		if (GetRCCode(client2) != NULL && !strcmp(GetRCCode(client2), parv[1]))
 		{
 			if (is_handshake_finished(client2))
