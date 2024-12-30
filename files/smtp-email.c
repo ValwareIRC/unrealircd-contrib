@@ -2,6 +2,7 @@
 	LICENSE: GPLv3-or-later
 	Copyright Ⓒ 2024 Valerie Liu
 	Sends emails about chosen logs to chosen recipients
+ 	This module requires cURL in order to work
 */
 
 /*** <<<MODULE MANAGER START>>>
@@ -13,6 +14,7 @@ module
 		max-unrealircd-version "6.*";
 		post-install-text {
 				"The module is installed. Please add the following line to your unrealircd.conf";
+				"This module requires that cURL be installed on your system. Make sure to enable it in the ./Config script";
 				"loadmodule \"third/smtp-email\";";
 				"And see the documentation for how to configure";
 				"Once you're done, you can /REHASH";
