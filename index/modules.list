@@ -243,9 +243,9 @@ module "third/restrict-chans"
 	documentation "https://github.com/ValwareIRC/valware-unrealircd-mods/blob/main/restrict-chans/README.md";
 	troubleshooting "In case of problems, documentation or e-mail me at v.a.pond@outlook.com";
 	source "https://raw.githubusercontent.com/unrealircd/unrealircd-contrib/unreal6/files/restrict-chans.c";
-	sha256sum "7d426f63f53baeb08cf58603dc3bb811c1a3f72dc9854478f3e7299f65cada4d";
+	sha256sum "fa1d882a92d430e1c19e1c9378d199b391a10ab71ce1796303bebc01affd4f06";
 	min-unrealircd-version "6.*";
-	max-unrealircd-version "6.*";
+	max-unrealircd-version "6.1.6";
 	post-install-text
 	{
 		"The module is installed. Now all you need to do is add a loadmodule line:";
