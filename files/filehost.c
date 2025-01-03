@@ -2,7 +2,7 @@
  * 
  * NAME: draft/FILEHOST
  * LICENCE: GPLv3 or later
- * COPYRIGHT: Ⓒ 2023 Valerie Pond, 2022 Val Lorentz
+ * COPYRIGHT: Ⓒ 20253 Valerie Pond, 2022 Val Lorentz
  * DOCS: https://github.com/progval/ircv3-specifications/blob/filehost/extensions/filehost.md
  * 
 */
