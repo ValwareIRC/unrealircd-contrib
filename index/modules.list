@@ -823,6 +823,27 @@ module "third/noghosts"
 	}
 }
 
+module "third/smtp-email"
+{
+	description "Send emails about chosen logs using SMTP";
+	version "1.0";
+	author "Valware";
+	documentation "https://github.com/ValwareIRC/valware-unrealircd-mods/blob/main/email/README.md";
+	troubleshooting "In case of problems, documentation or e-mail me at v.a.pond@outlook.com";
+	source "https://raw.githubusercontent.com/unrealircd/unrealircd-contrib/unreal6/files/smtp-email.c";
+	sha256sum "b9d45d7a0690d608cabfb29221fc282cdd7e1099a7c5a66745f944d9016526af";
+	min-unrealircd-version "6.1.8.1";
+	max-unrealircd-version "6.*";
+	post-install-text
+	{
+		"The module is installed. Please add the following line to your unrealircd.conf";
+		"This module requires that cURL be installed on your system. Make sure to enable it in the ./Config script";
+		"loadmodule \"third/smtp-email\";";
+		"And see the documentation for how to configure";
+		"Once you're done, you can /REHASH";
+	}
+}
+
 module "third/textshun"
 {
 	description "Drop messages based on nick and body";
