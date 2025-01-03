@@ -59,6 +59,7 @@ MOD_TEST()
 
 MOD_INIT()
 {
+	setconf()
 	HookAdd(modinfo->handle, HOOKTYPE_CONFIGRUN, 0, filehost_configrun);
 	return MOD_SUCCESS;
 }
@@ -66,7 +67,7 @@ MOD_INIT()
 MOD_LOAD()
 {
 	ISupport *is;
-    if (!(is = ISupportAdd(modinfo->handle, "draft/FILEHOST", cfg.isupport_line)))
+	if (!(is = ISupportAdd(modinfo->handle, "draft/FILEHOST", cfg.isupport_line)))
 		return MOD_FAILED;
 	return MOD_SUCCESS;
 }
@@ -97,15 +98,14 @@ int filehost_configtest(ConfigFile *cf, ConfigEntry *ce, int type, int *errs)
 {
 	int errors = 0;
 	ConfigEntry *cep;
-    freeconf();
-    setconf();
+	
 	if (type != CONFIG_MAIN)
 		return 0;
 
 	if (!ce || !ce->name)
-        return 0;
+		return 0;
 
-    if (strcmp(ce->name, CONF_FILEHOST))
+	if (strcmp(ce->name, CONF_FILEHOST))
 		return 0;
 
 	for (cep = ce->items; cep; cep = cep->next)
@@ -158,7 +158,7 @@ int filehost_configrun(ConfigFile *cf, ConfigEntry *ce, int type)
 			addmultiline(&cfg.hosts, cep->value);
 		
 	}
-    
+	
 	for (MultiLine *m = cfg.hosts; m; m = m->next)
 	{
 		strlcat(buf,m->line, sizeof(buf));
